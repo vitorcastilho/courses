@@ -1,7 +1,8 @@
 package com.course.application.service.matricula;
 
+import static com.course.application.mapper.MatriculaMapper.convertMatriculaUpdateDtoToMatricula;
+
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import com.course.application.dto.matricula.MatriculaResponseDto;
 import com.course.application.dto.matricula.MatriculaUpdateDto;
 import com.course.application.mapper.MatriculaMapper;
 import com.course.domain.model.Matricula;
+import com.course.infrastructure.Exception.ResourceNotFoundException;
+import com.course.infrastructure.Exception.ValidationException;
 import com.course.infrastructure.repository.MatriculaRepository;
 
 @Service
@@ -27,24 +30,43 @@ public class MatriculaService implements IMatriculaService {
 		return matriculasDto;
 	}
 
-	public Optional<Matricula> buscarPorId(Long id) {
-		return matriculaRepository.findById(id);
+	public MatriculaResponseDto buscarPorId(Long id) {
+		Matricula matricula = matriculaRepository.findById(id).orElseThrow(
+				() -> new ResourceNotFoundException("Matricula não encontrada com id: ".concat(id.toString()),
+						"Matrícula não encontrada. Favor verificar o id fornecido."));
+		return new MatriculaResponseDto(matricula);
 	}
 
-	public Matricula cadastrarNovaMatricula(MatriculaInsertDto matriculaDto) {
-		return matriculaRepository.save(MatriculaMapper.convertMatriculaInsertDtoToMatricula(matriculaDto));
+	public Long cadastrarNovaMatricula(MatriculaInsertDto matriculaDto) {
+		Matricula matricula = matriculaRepository
+				.save(MatriculaMapper.convertMatriculaInsertDtoToMatricula(matriculaDto));
+		return matricula.getId();
 	}
 
-	public Matricula atualizarMatricula(MatriculaUpdateDto matriculaDto) {
-		return matriculaRepository.save(MatriculaMapper.convertMatriculaUpdateDtoToMatricula(matriculaDto));
+	public MatriculaResponseDto atualizarMatricula(MatriculaUpdateDto matriculaDto) {
+		if (matriculaDto.getId() == null) {
+			throw new ValidationException("O id da matrícula é obrigatório.",
+					"Para atualizar a matrícula, é obrigatório informar o id da matrícula.");
+		}
+		matriculaRepository.findById(matriculaDto.getId())
+				.orElseThrow(() -> new ResourceNotFoundException(
+						"Matrícula não encontrado com id: ".concat(matriculaDto.getId().toString()),
+						"Matrícula não encontrado. Favor verificar o id fornecido."));
+		return new MatriculaResponseDto(matriculaRepository.save(convertMatriculaUpdateDtoToMatricula(matriculaDto)));
 	}
 
 	public void deletar(Long id) {
+		matriculaRepository.findById(id).orElseThrow(
+				() -> new ResourceNotFoundException("Matricula não encontrada com id: ".concat(id.toString()),
+						"Matrícula não encontrada. Favor verificar o id fornecido."));
 		matriculaRepository.deleteById(id);
 	}
 
-	public List<Matricula> listarMatriculasPorAluno(Long alunoId) {
-		return matriculaRepository.findByAlunoId(alunoId);
+	public List<MatriculaResponseDto> listarMatriculasPorAluno(Long alunoId) {
+		List<Matricula> matriculas = matriculaRepository.findByAlunoId(alunoId);
+		List<MatriculaResponseDto> matriculasDto = matriculas.stream()
+				.map(matricula -> new MatriculaResponseDto(matricula)).collect(Collectors.toList());
+		return matriculasDto;
 	}
 
 	public Double calcularMediaNotasPorCurso(Long cursoId) {

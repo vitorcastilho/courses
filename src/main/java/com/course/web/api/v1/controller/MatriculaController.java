@@ -1,5 +1,7 @@
 package com.course.web.api.v1.controller;
 
+import static org.springframework.http.HttpStatus.CREATED;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,6 @@ import com.course.application.dto.matricula.MatriculaInsertDto;
 import com.course.application.dto.matricula.MatriculaResponseDto;
 import com.course.application.dto.matricula.MatriculaUpdateDto;
 import com.course.application.service.matricula.IMatriculaService;
-import com.course.domain.model.Matricula;
 
 @RestController
 @RequestMapping(MatriculaController.API_URL)
@@ -29,8 +30,8 @@ public class MatriculaController {
 	private IMatriculaService matriculaService;
 
 	@PostMapping
-	public Matricula criarMatricula(@RequestBody MatriculaInsertDto matriculaDto) {
-		return matriculaService.cadastrarNovaMatricula(matriculaDto);
+	public ResponseEntity<Long> criarMatricula(@RequestBody MatriculaInsertDto matriculaDto) {
+		return new ResponseEntity<>(matriculaService.cadastrarNovaMatricula(matriculaDto), CREATED);
 	}
 
 	@GetMapping
@@ -39,16 +40,15 @@ public class MatriculaController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Matricula> buscarMatriculaPorId(@PathVariable Long id) {
-		return matriculaService.buscarPorId(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+	public ResponseEntity<MatriculaResponseDto> buscarMatriculaPorId(@PathVariable Long id) {
+		return ResponseEntity.ok(matriculaService.buscarPorId(id));
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Matricula> atualizarMatricula(@PathVariable Long id, @RequestBody MatriculaUpdateDto matriculaDto) {
-		return matriculaService.buscarPorId(id).map(matriculaExistente -> {
-			matriculaDto.setId(id);
-			return ResponseEntity.ok(matriculaService.atualizarMatricula(matriculaDto));
-		}).orElse(ResponseEntity.notFound().build());
+	public ResponseEntity<MatriculaResponseDto> atualizarMatricula(@PathVariable Long id,
+			@RequestBody MatriculaUpdateDto matriculaDto) {
+		matriculaDto.setId(id);
+		return ResponseEntity.ok(matriculaService.atualizarMatricula(matriculaDto));
 	}
 
 	@DeleteMapping("/{id}")
