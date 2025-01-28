@@ -40,7 +40,7 @@ public class AlunoController {
 
 	@GetMapping
 	public ResponseEntity<List<AlunoResponseDto>> listarAlunos() {
-		return alunoService.listarTodos();
+		return ResponseEntity.ok(alunoService.listarTodos());
 	}
 
 	@GetMapping("/{id}")

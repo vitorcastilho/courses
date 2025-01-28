@@ -35,7 +35,7 @@ public class MatriculaController {
 
 	@GetMapping
 	public ResponseEntity<List<MatriculaResponseDto>> listarMatriculas() {
-		return matriculaService.listarTodos();
+		return ResponseEntity.ok(matriculaService.listarTodos());
 	}
 
 	@GetMapping("/{id}")
