@@ -1,6 +1,7 @@
 package com.course.application.service.aluno;
 
 import static com.course.application.mapper.AlunoMapper.convertAlunoInsertDtoToAluno;
+import static com.course.application.mapper.AlunoMapper.convertAlunoUpdateDtoToAluno;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,12 +47,11 @@ public class AlunoService implements IAlunoService {
 			throw new ValidationException("O id do aluno é obrigatório.",
 					"Para atualizar o aluno, é obrigatório informar o id do aluno.");
 		}
-		Aluno aluno = alunoRepository.findById(alunoDto.getId())
+		alunoRepository.findById(alunoDto.getId())
 				.orElseThrow(() -> new ResourceNotFoundException(
 						"Aluno não encontrado com id: ".concat(alunoDto.getId().toString()),
 						"Aluno não encontrado. Favor verificar o id fornecido."));
-		aluno.setNome(alunoDto.getNome());
-		return new AlunoResponseDto(alunoRepository.save(aluno));
+		return new AlunoResponseDto(alunoRepository.save(convertAlunoUpdateDtoToAluno(alunoDto)));
 	}
 
 	public void deletar(Long id) {

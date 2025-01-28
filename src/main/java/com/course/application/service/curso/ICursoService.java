@@ -1,22 +1,20 @@
 package com.course.application.service.curso;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.course.application.dto.curso.CursoInsertDto;
 import com.course.application.dto.curso.CursoResponseDto;
 import com.course.application.dto.curso.CursoUpdateDto;
-import com.course.domain.model.Curso;
 
 public interface ICursoService {
 
 	List<CursoResponseDto> listarTodos();
 
-	Optional<Curso> buscarPorId(Long id);
+	CursoResponseDto buscarPorId(Long id);
 
-	Curso cadastrarNovoCurso(CursoInsertDto cursoDto);
+	Long cadastrarNovoCurso(CursoInsertDto cursoDto);
 
-	Curso atualizaCurso(CursoUpdateDto cursoDto);
+	CursoResponseDto atualizaCurso(CursoUpdateDto cursoDto);
 
 	void deletar(Long id);
 }
