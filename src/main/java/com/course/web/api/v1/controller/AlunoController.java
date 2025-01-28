@@ -1,5 +1,7 @@
 package com.course.web.api.v1.controller;
 
+import static org.springframework.http.HttpStatus.CREATED;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,6 @@ import com.course.application.dto.aluno.AlunoResponseDto;
 import com.course.application.dto.aluno.AlunoUpdateDto;
 import com.course.application.service.aluno.IAlunoService;
 import com.course.application.service.matricula.MatriculaService;
-import com.course.domain.model.Aluno;
 import com.course.domain.model.Matricula;
 
 @RestController
@@ -34,8 +35,8 @@ public class AlunoController {
 	private MatriculaService matriculaService;
 
 	@PostMapping
-	public Aluno criarAluno(@RequestBody AlunoInsertDto alunoDto) {
-		return alunoService.cadastrarNovoAluno(alunoDto);
+	public ResponseEntity<Long> criarAluno(@RequestBody AlunoInsertDto alunoDto) {
+		return new ResponseEntity<>(alunoService.cadastrarNovoAluno(alunoDto), CREATED);
 	}
 
 	@GetMapping
@@ -44,16 +45,15 @@ public class AlunoController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Aluno> buscarAlunoPorId(@PathVariable Long id) {
-		return alunoService.buscarPorId(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+	public ResponseEntity<AlunoResponseDto> buscarAlunoPorId(@PathVariable Long id) {
+		return ResponseEntity.ok(alunoService.buscarPorId(id));
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Aluno> atualizarAluno(@PathVariable Long id, @RequestBody AlunoUpdateDto alunoDto) {
-		return alunoService.buscarPorId(id).map(alunoExistente -> {
-			alunoDto.setId(id);
-			return ResponseEntity.ok(alunoService.atualizarAluno(alunoDto));
-		}).orElse(ResponseEntity.notFound().build());
+	public ResponseEntity<AlunoResponseDto> atualizarAluno(@PathVariable Long id,
+			@RequestBody AlunoUpdateDto alunoDto) {
+		alunoDto.setId(id);
+		return ResponseEntity.ok(alunoService.atualizarAluno(alunoDto));
 	}
 
 	@DeleteMapping("/{id}")
