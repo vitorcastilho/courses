@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.course.application.dto.curso.CursoInsertDto;
@@ -23,11 +22,11 @@ public class CursoService implements ICursoService {
 	@Autowired
 	private CursoRepository cursoRepository;
 
-	public ResponseEntity<List<CursoResponseDto>> listarTodos() {
+	public List<CursoResponseDto> listarTodos() {
 		List<Curso> cursos = cursoRepository.findAll();
 		List<CursoResponseDto> cursosDto = cursos.stream().map(curso -> new CursoResponseDto(curso))
 				.collect(Collectors.toList());
-		return ResponseEntity.ok(cursosDto);
+		return cursosDto;
 	}
 
 	public Optional<Curso> buscarPorId(Long id) {

@@ -35,7 +35,7 @@ public class CursoController {
 
 	@GetMapping
 	public ResponseEntity<List<CursoResponseDto>> listarCursos() {
-		return cursoService.listarTodos();
+		return ResponseEntity.ok(cursoService.listarTodos());
 	}
 
 	@GetMapping("/{id}")

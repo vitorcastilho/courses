@@ -1,33 +1,72 @@
-HELP.md
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+# Arquivos de compilação e log
+*.class
+*.log
+*.war
+*.ear
+*.jar
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
 
-### IntelliJ IDEA ###
-.idea
-*.iws
+# IDEs
+## IntelliJ IDEA
+.idea/
 *.iml
-*.ipr
+out/
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+## Eclipse
+*.metadata
+*.classpath
+*.project
+.settings/
+
+## NetBeans
+nbproject/private/
 build/
-!**/src/main/**/build/
-!**/src/test/**/build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
 
-### VS Code ###
+# Build tools
+## Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+## Gradle
+.gradle/
+build/
+!gradle-wrapper.jar
+**/build/
+
+# Configurações do sistema operacional
+*.swp
+*.swo
+*.tmp
+
+# Teste
+test-output/
+
+# Arquivos de cache
+*.log
+*.lock
+*.tmp
+*.bak
+*.swp
+*.idea/
+*.iml
+*.class
+hs_err_pid*
+node_modules/
+
+# Outros
+# Arquivos que podem variar dependendo do ambiente
+.env
+.env.*
 .vscode/
+
