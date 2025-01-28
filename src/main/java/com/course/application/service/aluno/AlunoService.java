@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import com.course.application.dto.aluno.AlunoInsertDto;
 import com.course.application.dto.aluno.AlunoResponseDto;
 import com.course.application.dto.aluno.AlunoUpdateDto;
+import com.course.application.dto.matricula.MatriculaResponseDto;
+import com.course.application.service.matricula.IMatriculaService;
 import com.course.domain.model.Aluno;
 import com.course.infrastructure.Exception.ResourceNotFoundException;
 import com.course.infrastructure.Exception.ValidationException;
@@ -22,6 +24,9 @@ public class AlunoService implements IAlunoService {
 
 	@Autowired
 	private AlunoRepository alunoRepository;
+
+	@Autowired
+	private IMatriculaService matriculaService;
 
 	public List<AlunoResponseDto> listarTodos() {
 		List<Aluno> alunos = alunoRepository.findAll();
@@ -59,5 +64,9 @@ public class AlunoService implements IAlunoService {
 				.orElseThrow(() -> new ResourceNotFoundException("Aluno não encontrado com id: ".concat(id.toString()),
 						"Aluno não encontrado. Favor verificar o id fornecido."));
 		alunoRepository.deleteById(id);
+	}
+
+	public List<MatriculaResponseDto> listarMatriculasPorAluno(Long alunoId) {
+		return matriculaService.listarMatriculasPorAluno(alunoId);
 	}
 }

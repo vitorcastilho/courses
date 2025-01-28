@@ -18,9 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.course.application.dto.aluno.AlunoInsertDto;
 import com.course.application.dto.aluno.AlunoResponseDto;
 import com.course.application.dto.aluno.AlunoUpdateDto;
+import com.course.application.dto.matricula.MatriculaResponseDto;
 import com.course.application.service.aluno.IAlunoService;
-import com.course.application.service.matricula.MatriculaService;
-import com.course.domain.model.Matricula;
 
 @RestController
 @RequestMapping(AlunoController.API_URL)
@@ -30,9 +29,6 @@ public class AlunoController {
 
 	@Autowired
 	private IAlunoService alunoService;
-
-	@Autowired
-	private MatriculaService matriculaService;
 
 	@PostMapping
 	public ResponseEntity<Long> criarAluno(@RequestBody AlunoInsertDto alunoDto) {
@@ -63,8 +59,7 @@ public class AlunoController {
 	}
 
 	@GetMapping("/{id}/cursos")
-	public ResponseEntity<List<Matricula>> listarCursosDoAluno(@PathVariable Long id) {
-		List<Matricula> matriculas = matriculaService.listarMatriculasPorAluno(id);
-		return ResponseEntity.ok(matriculas);
+	public ResponseEntity<List<MatriculaResponseDto>> listarCursosDoAluno(@PathVariable Long id) {
+		return ResponseEntity.ok(alunoService.listarMatriculasPorAluno(id));
 	}
 }
