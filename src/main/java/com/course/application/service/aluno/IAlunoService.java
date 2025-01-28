@@ -1,22 +1,23 @@
 package com.course.application.service.aluno;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.course.application.dto.aluno.AlunoInsertDto;
 import com.course.application.dto.aluno.AlunoResponseDto;
 import com.course.application.dto.aluno.AlunoUpdateDto;
-import com.course.domain.model.Aluno;
+import com.course.application.dto.matricula.MatriculaResponseDto;
 
 public interface IAlunoService {
 
 	List<AlunoResponseDto> listarTodos();
 
-	Optional<Aluno> buscarPorId(Long id);
+	AlunoResponseDto buscarPorId(Long id);
 
-	Aluno cadastrarNovoAluno(AlunoInsertDto alunoDto);
-	
-	Aluno atualizarAluno(AlunoUpdateDto alunoDto);
+	Long cadastrarNovoAluno(AlunoInsertDto alunoDto);
+
+	AlunoResponseDto atualizarAluno(AlunoUpdateDto alunoDto);
 
 	void deletar(Long id);
+	
+	List<MatriculaResponseDto> listarMatriculasPorAluno(Long alunoId);
 }

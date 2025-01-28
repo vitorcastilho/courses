@@ -1,5 +1,7 @@
 package com.course.web.api.v1.controller;
 
+import static org.springframework.http.HttpStatus.CREATED;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,6 @@ import com.course.application.dto.curso.CursoInsertDto;
 import com.course.application.dto.curso.CursoResponseDto;
 import com.course.application.dto.curso.CursoUpdateDto;
 import com.course.application.service.curso.ICursoService;
-import com.course.domain.model.Curso;
 
 @RestController
 @RequestMapping(CursoController.API_URL)
@@ -29,8 +30,8 @@ public class CursoController {
 	private ICursoService cursoService;
 
 	@PostMapping
-	public Curso criarCurso(@RequestBody CursoInsertDto cursoDto) {
-		return cursoService.cadastrarNovoCurso(cursoDto);
+	public ResponseEntity<Long> criarCurso(@RequestBody CursoInsertDto cursoDto) {
+		return new ResponseEntity<>(cursoService.cadastrarNovoCurso(cursoDto), CREATED);
 	}
 
 	@GetMapping
@@ -39,16 +40,15 @@ public class CursoController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Curso> buscarCursoPorId(@PathVariable Long id) {
-		return cursoService.buscarPorId(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+	public ResponseEntity<CursoResponseDto> buscarCursoPorId(@PathVariable Long id) {
+		return ResponseEntity.ok(cursoService.buscarPorId(id));
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Curso> atualizarCurso(@PathVariable Long id, @RequestBody CursoUpdateDto cursoDto) {
-		return cursoService.buscarPorId(id).map(cursoExistente -> {
-			cursoDto.setId(id);
-			return ResponseEntity.ok(cursoService.atualizaCurso(cursoDto));
-		}).orElse(ResponseEntity.notFound().build());
+	public ResponseEntity<CursoResponseDto> atualizarCurso(@PathVariable Long id,
+			@RequestBody CursoUpdateDto cursoDto) {
+		cursoDto.setId(id);
+		return ResponseEntity.ok(cursoService.atualizaCurso(cursoDto));
 	}
 
 	@DeleteMapping("/{id}")
